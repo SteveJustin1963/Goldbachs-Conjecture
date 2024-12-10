@@ -10,7 +10,152 @@ Goldbach's Conjecture is a beautiful and intriguing challenge in mathematics. To
 - Treat each even number \( 2n \) as a node in a graph.
 - Connect two nodes \( 2n_1 \) and \( 2n_2 \) if there exists a shared prime \( p \) such that \( p \) and \( 2n_1 - p \), as well as \( p \) and \( 2n_2 - p \), are prime pairs.
 
-**Goal:** Establish structural patterns or invariant properties of the graph that imply every \( 2n \) has at least one pair of prime addends.
+
+```
+function main()
+    % Main function to call represent_even_numbers_as_graphs
+    N = 50; % Define the upper bound for even numbers
+    represent_even_numbers_as_graphs(N);
+end
+
+function represent_even_numbers_as_graphs(N)
+    % REPRESENT_EVEN_NUMBERS_AS_GRAPHS: Represents even numbers as nodes and connects nodes
+    % based on the shared prime criterion specified in the problem.
+    %
+    % Input:
+    % N - Upper bound for the even numbers to be considered
+
+    % Generate even numbers
+    even_numbers = 2:2:N;
+
+    % Find primes up to N for use in the graph
+    primes_list = primes(N);
+
+    % Create an adjacency matrix for the graph
+    num_nodes = length(even_numbers);
+    adjacency_matrix = zeros(num_nodes);
+
+    % Iterate over each pair of even numbers
+    for i = 1:num_nodes
+        for j = i+1:num_nodes
+            n1 = even_numbers(i);
+            n2 = even_numbers(j);
+
+            % Check if there exists a shared prime p
+            for p = primes_list
+                if p >= n1 || p >= n2
+                    break;
+                end
+
+                % Check prime pairs for both numbers
+                if isprime(n1 - p) && isprime(n2 - p)
+                    adjacency_matrix(i, j) = 1;
+                    adjacency_matrix(j, i) = 1;
+                    break;
+                end
+            end
+        end
+    end
+
+    % Display the graph as an adjacency matrix
+    disp('Adjacency Matrix:');
+    disp(adjacency_matrix);
+
+    % Visualize the graph
+    visualize_graph(even_numbers, adjacency_matrix);
+end
+
+function visualize_graph(nodes, adjacency_matrix)
+    % VISUALIZE_GRAPH: Visualizes the graph using gplot
+    %
+    % Input:
+    % nodes - List of even numbers (node labels)
+    % adjacency_matrix - Adjacency matrix of the graph
+
+    % Generate coordinates for the graph layout
+    theta = linspace(0, 2*pi, length(nodes)+1)';
+    x = cos(theta(1:end-1));
+    y = sin(theta(1:end-1));
+
+    % Find edges from the adjacency matrix
+    [row, col] = find(triu(adjacency_matrix));
+    edges = [row, col];
+
+    % Plot the graph
+    figure;
+    hold on;
+    gplot(adjacency_matrix, [x, y], '-o');
+    for i = 1:length(nodes)
+        text(x(i)*1.1, y(i)*1.1, num2str(nodes(i)), 'HorizontalAlignment', 'center');
+    end
+    axis equal;
+    title('Graph Representation of Even Numbers');
+    hold off;
+end
+
+```
+Adjacency Matrix:
+ Columns 1 through 20:
+
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0
+   0   0   0   1   1   0   1   1   0   1   1   0   1   0   0   1   1   0   0   1
+   0   0   1   0   1   1   1   1   1   1   1   1   1   1   0   1   1   1   0   1
+   0   0   1   1   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1
+   0   0   0   1   1   0   1   1   1   1   1   1   1   1   1   0   1   1   1   0
+   0   0   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1   0   1
+   0   0   0   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1   1
+   0   0   0   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1   1
+   0   0   0   1   1   1   1   1   1   1   1   1   1   0   1   0   1   1   0   1
+   0   0   0   0   1   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1
+   0   0   1   1   1   0   1   1   1   1   1   1   1   0   1   0   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   0   1   1   1
+   0   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   0   1   1
+   0   0   0   0   1   1   1   0   1   1   1   1   1   0   1   1   1   1   0   0
+   0   0   1   1   1   0   1   1   1   1   1   1   1   1   1   1   1   1   0   0
+   0   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   0   1
+   0   0   0   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1
+   0   0   1   1   1   1   1   1   1   1   1   1   1   0   1   1   1   1   1   1
+
+ Columns 21 through 25:
+
+   0   0   0   0   0
+   0   0   0   0   0
+   0   1   1   0   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   0   1   1   0
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   0   1   1
+   1   1   1   1   1
+   0   1   1   1   1
+   1   0   1   1   1
+   1   1   0   1   1
+   1   1   1   0   1
+   1   1   1   1   0
+
+![image](https://github.com/user-attachments/assets/30f0a97c-71a9-4a7c-be46-a532bc9fc28b)
+
+
+[Execution complete with exit code 0]
+
 
 ---
 
