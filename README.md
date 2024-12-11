@@ -1030,7 +1030,7 @@ Even Number | Number of Prime Pairs
          96 | 7
          98 | 3
         100 | 6
-
+ 
 Distribution of Prime Pairs:
 Number of Pairs | Frequency
 ---------------|----------
